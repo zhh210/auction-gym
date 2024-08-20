@@ -42,8 +42,9 @@ class FirstPriceReserve(AllocationMechanism):
         self.reserve_price = reserve_price
 
     def allocate(self, bids, num_slots):
+        bids = np.array([i for i in bids if i>= self.reserve_price])
         winners = np.argsort(-bids)[:num_slots]
-        sorted_bids = -np.sort(-bids)
+        sorted_bids = np.append(-np.sort(-bids), self.reserve_price)
         prices = np.maximum(sorted_bids[:num_slots], self.reserve_price)
         second_prices = sorted_bids[1:num_slots+1]
         return winners, prices, second_prices
@@ -56,7 +57,8 @@ class SecondPriceReserve(AllocationMechanism):
         self.reserve_price = reserve_price
 
     def allocate(self, bids, num_slots):
+        bids = np.array([i for i in bids if i>= self.reserve_price])
         winners = np.argsort(-bids)[:num_slots]
-        sorted_bids = -np.sort(-bids)
+        sorted_bids = np.append(-np.sort(-bids), self.reserve_price)
         prices = np.maximum(sorted_bids[1:num_slots+1], self.reserve_price)
         return winners, prices, prices
