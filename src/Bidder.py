@@ -488,7 +488,11 @@ class DoublyRobustBidder(Bidder):
             # Predict Utility -- \hat{u}
             orig_features = torch.Tensor(np.hstack((estimated_CTRs.reshape(-1,1), values.reshape(-1,1), gammas_numpy.reshape(-1, 1))))
             W = self.winrate_model(orig_features).squeeze().detach().numpy()
-            print('AUC predicting P(win):\t\t\t\t', roc_auc_score(won_mask.astype(np.uint8), W))
+            try:
+                # Possible failure when running in cpm_mode
+                print('AUC predicting P(win):\t\t\t\t', roc_auc_score(won_mask.astype(np.uint8), W))
+            except:
+                pass
 
             V = estimated_CTRs * values
             P = estimated_CTRs * values * gammas_numpy
@@ -544,7 +548,11 @@ class DoublyRobustBidder(Bidder):
         # Predict Utility -- \hat{u}
         orig_features = torch.Tensor(np.hstack((estimated_CTRs.reshape(-1,1), values.reshape(-1,1), gammas_numpy.reshape(-1, 1))))
         W = self.winrate_model(orig_features).squeeze().detach().numpy()
-        print('AUC predicting P(win):\t\t\t\t', roc_auc_score(won_mask.astype(np.uint8), W))
+        try:
+            # Possible failure when running in cpm_mode
+            print('AUC predicting P(win):\t\t\t\t', roc_auc_score(won_mask.astype(np.uint8), W))
+        except:
+            pass
 
         V = estimated_CTRs * values
         P = estimated_CTRs * values * gammas_numpy
