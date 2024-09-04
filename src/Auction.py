@@ -25,7 +25,7 @@ class Auction:
 
         self.num_participants_per_round = num_participants_per_round
 
-    def simulate_opportunity(self):
+    def simulate_opportunity(self, cpm_mode = False):
         # Sample the number of slots uniformly between [1, max_slots]
         num_slots = self.rng.integers(1, self.max_slots + 1)
 
@@ -50,6 +50,7 @@ class Auction:
             bids.append(bid)
             # Compute the true CTRs for items in this agent's catalogue
             true_CTR = sigmoid(true_context @ self.agent2items[agent.name].T)
+            if cpm_mode: true_CTR = np.ones_like(true_CTR)
             agent.logs[-1].set_true_CTR(np.max(true_CTR * self.agents2item_values[agent.name]), true_CTR[item])
             CTRs.append(true_CTR[item])
         bids = np.array(bids)
