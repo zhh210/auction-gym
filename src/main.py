@@ -21,7 +21,7 @@ def parse_kwargs(kwargs):
     return ',' + parsed if parsed else ''
 
 
-def parse_config(path):
+def parse_config(path, uniform_value = True):
     with open(path) as f:
         config = json.load(f)
 
@@ -63,7 +63,7 @@ def parse_config(path):
     }
 
     agents2item_values = {
-        agent_config['name']: rng.lognormal(0.1, 0.2, agent_config['num_items'])
+        agent_config['name']: rng.uniform(size = agent_config['num_items']) if uniform_value else rng.lognormal(0.1, 0.2, agent_config['num_items'])
         for agent_config in agent_configs
     }
 
@@ -114,7 +114,7 @@ def simulation_run():
         print(f'==== ITERATION {i} ====')
 
         for _ in tqdm(range(rounds_per_iter)):
-            auction.simulate_opportunity()
+            auction.simulate_opportunity(cpm_mode = True)
 
         names = [agent.name for agent in auction.agents]
         net_utilities = [agent.net_utility for agent in auction.agents]
